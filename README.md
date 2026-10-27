@@ -217,6 +217,19 @@ docker compose up --build
 - 云平台需要配置环境变量；未配置 `LLM_*` 时仍可用本地确定性模式。
 - 免费实例通常不保证持久磁盘；正式使用请挂载持久卷或使用外部存储。
 
+### Vercel
+
+`pyproject.toml` 已配置 FastAPI 入口：
+
+```toml
+[tool.vercel]
+entrypoint = "src.finguard.main:app"
+```
+
+直接在 Vercel 导入 GitHub 仓库 `Shark-0027/zuoy`，框架/预设可留空或选择 Backend/FastAPI。未设置 `LLM_*` 时应用会以本地确定性模式运行。
+
+Vercel 的 Serverless 文件系统通常只读，应用会把可写状态放到 `/tmp/finguard`；上传文件和运行状态在冷启动/ redeploy 后可能丢失，这不是持久数据库替代品。
+
 ---
 
 ## 7. 本地数据与安全边界
