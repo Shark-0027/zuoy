@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FinGuard 财务诊断与经营决策 Agent — 本地可运行的财务分析工作台。演示公司为虚构主体。">
+  <meta name="color-scheme" content="light">
+  <title>FinGuard · 财务诊断与经营决策 Agent</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#mainContent">跳转到主要内容</a>
+
+  <!-- Inline icon sprite: no external icon dependency -->
+  <svg class="svg-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"/><path d="M4 15v3.5A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5V15"/></symbol>
+    <symbol id="i-agent" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><circle cx="18" cy="6" r="2.5"/><path d="M8.5 6h7M18 8.5v7M8.5 17.5H13a3 3 0 0 0 3-3v-3"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10m5 10V4m5 16v-7m5 7V7"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 4.1 2.8 17a2 2 0 0 0 1.7 3h15a2 2 0 0 0 1.7-3L13.7 4.1a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4.5M12 17h.01"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5M8.5 13h7M8.5 17h5"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V21h-4v-.08A1.7 1.7 0 0 0 8.94 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.6 15 1.7 1.7 0 0 0 3.08 14H3v-4h.08A1.7 1.7 0 0 0 4.6 8.94a1.7 1.7 0 0 0-.34-1.88L4.2 7l2.83-2.83.06.06A1.7 1.7 0 0 0 8.97 4.6 1.7 1.7 0 0 0 10 3.08V3h4v.08a1.7 1.7 0 0 0 1.03 1.55 1.7 1.7 0 0 0 1.88-.34l.06-.06L19.8 7l-.06.06a1.7 1.7 0 0 0-.34 1.88A1.7 1.7 0 0 0 20.92 10H21v4h-.08A1.7 1.7 0 0 0 19.4 15Z"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M4 12h16m0 0-6-6m6 6-6 6"/></symbol>
+    <symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4.5-4.5M12 15l-4.5-4.5"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.2 4.2L19 7"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.6 2.9 8.1 7 10 4.1-1.9 7-5.4 7-10V6Z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M6.1 8a7 7 0 0 1 11.6-1L20 12M4 12l2.3 5a7 7 0 0 0 11.6-1"/></symbol>
+    <symbol id="i-print" viewBox="0 0 24 24"><path d="M7 8V4h10v4M7 17H5a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="6" rx="1"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-8 8M10 5H5a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h13a1 1 0 0 0 1-1v-5"/></symbol>
+    <symbol id="i-panel" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.1 2.4c-.9.3-1.6 1-1.6 1.9v.2"/><path d="M12 17h.01"/></symbol>
+    <symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.5 6.5a4 4 0 0 0-5-5L7 4l3 3 2.5-2.5a4 4 0 0 0 2 2Z"/><path d="m9.5 8.5-6 6a2.1 2.1 0 0 0 3 3l6-6"/><path d="m16 14 4 4-2 2-4-4"/></symbol>
+  </svg>
+
+  <div class="app-shell" id="appShell">
+    <aside class="sidebar" id="sidebar" aria-label="产品导航">
+      <a class="brand" href="#dashboard" data-route="dashboard" aria-label="FinGuard 工作台">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 40 40">
+            <rect width="40" height="40" rx="11" fill="#0F766E"></rect>
+            <path d="M11.5 29V12h8.5M11.5 20.5h6" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M23 29V19m0 0 5.5-4M23 19l-3.5-2.7" fill="none" stroke="#8EDDD2" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </span>
+        <span class="brand-copy">
+          <strong>FinGuard</strong>
+          <span>财务诊断 Agent</span>
+        </span>
+      </a>
+
+      <div class="sidebar-context" aria-label="当前工作空间">
+        <span class="workspace-avatar">澄</span>
+        <span class="workspace-copy">
+          <span>当前工作空间</span>
+          <strong>澄海智造 · 示例</strong>
+        </span>
+        <svg class="icon icon-sm" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+      </div>
+
+      <nav class="main-nav" aria-label="主导航">
+        <div class="nav-group">
+          <p class="nav-group-label">概览</p>
+          <a class="nav-item is-active" href="#dashboard" data-route="dashboard" aria-current="page" title="工作台">
+            <svg class="icon" aria-hidden="true"><use href="#i-grid"></use></svg>
+            <span class="nav-label">工作台</span>
+          </a>
+          <a class="nav-item" href="#import" data-route="import" title="数据导入">
+            <svg class="icon" aria-hidden="true"><use href="#i-upload"></use></svg>
+            <span class="nav-label">数据导入</span>
+            <span class="nav-count">4</span>
+          </a>
+        </div>
+
+        <div class="nav-group">
+          <p class="nav-group-label">智能分析</p>
+          <a class="nav-item" href="#agent" data-route="agent" title="Agent 工作区">
+            <svg class="icon" aria-hidden="true"><use href="#i-agent"></use></svg>
+            <span class="nav-label">Agent 工作区</span>
+            <span class="nav-dot nav-dot-warning" title="有待复核项" aria-label="有待复核项"></span>
+          </a>
+          <a class="nav-item" href="#metrics" data-route="metrics" title="指标分析">
+            <svg class="icon" aria-hidden="true"><use href="#i-chart"></use></svg>
+            <span class="nav-label">指标分析</span>
+          </a>
+          <a class="nav-item" href="#anomalies" data-route="anomalies" title="异常诊断">
+            <svg class="icon" aria-hidden="true"><use href="#i-alert"></use></svg>
+            <span class="nav-label">异常诊断</span>
+            <span class="nav-count nav-count-warning">6</span>
+          </a>
+          <a class="nav-item" href="#scenario" data-route="scenario" title="情景模拟">
+            <svg class="icon" aria-hidden="true"><use href="#i-sliders"></use></svg>
+            <span class="nav-label">情景模拟</span>
+          </a>
+        </div>
+
+        <div class="nav-group">
+          <p class="nav-group-label">交付</p>
+          <a class="nav-item" href="#report" data-route="report" title="诊断报告">
+            <svg class="icon" aria-hidden="true"><use href="#i-file"></use></svg>
+            <span class="nav-label">诊断报告</span>
+            <span class="nav-count nav-count-muted">草稿</span>
+          </a>
+        </div>
+
+        <div class="nav-group nav-group-bottom">
+          <a class="nav-item" href="#settings" data-route="settings" title="系统设置">
+            <svg class="icon" aria-hidden="true"><use href="#i-settings"></use></svg>
+            <span class="nav-label">设置与系统状态</span>
+          </a>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-preview-note" id="sidebarRuntimeNote">
+          <span class="status-dot status-dot-warning" id="sidebarRuntimeDot"></span>
+          <div>
+            <strong id="sidebarRuntimeTitle">正在连接本地服务</strong>
+            <span id="sidebarRuntimeText">读取真实分析状态…</span>
+          </div>
+        </div>
+        <button class="sidebar-collapse" id="sidebarCollapse" type="button" aria-label="收起侧边栏">
+          <svg class="icon" aria-hidden="true"><use href="#i-panel"></use></svg>
+          <span class="nav-label">收起侧边栏</span>
+        </button>
+      </div>
+    </aside>
+
+    <button class="sidebar-scrim" id="sidebarScrim" type="button" aria-label="关闭侧边栏" hidden></button>
+
+    <div class="app-main">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="icon-button sidebar-toggle" id="sidebarToggle" type="button" aria-label="切换侧边栏" aria-expanded="true" aria-controls="sidebar">
+            <svg class="icon" aria-hidden="true"><use href="#i-menu"></use></svg>
+          </button>
+          <div class="breadcrumb" aria-label="面包屑">
+            <span>工作空间</span>
+            <span class="breadcrumb-sep">/</span>
+            <strong id="currentBreadcrumb">工作台</strong>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <span class="demo-badge" id="runtimeBadge" title="真实后端运行状态">
+            <svg class="icon icon-sm" aria-hidden="true"><use href="#i-info"></use></svg>
+            <span id="runtimeBadgeText">正在连接本地服务</span>
+          </span>
+          <span class="period-chip" id="topbarPeriodChip">
+            <svg class="icon icon-sm" aria-hidden="true"><use href="#i-clock"></use></svg>
+            <span id="topbarPeriod">—</span>
+          </span>
+          <button class="button button-ghost button-sm projection-toggle" type="button" id="projectionToggle" aria-pressed="false" title="切换课堂投影模式">
+            <svg class="icon icon-sm" aria-hidden="true"><use href="#i-panel"></use></svg>
+            <span>投影模式</span>
+          </button>
+          <span class="topbar-divider" aria-hidden="true"></span>
+          <button class="user-chip" type="button" data-route="settings" aria-label="打开设置与系统状态">
+            <span class="user-avatar">陈</span>
+            <span class="user-meta"><strong>陈老师</strong><span>本地访客</span></span>
+            <svg class="icon icon-sm" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+          </button>
+        </div>
+      </header>
+
+      <main class="main-content" id="mainContent" tabindex="-1">
+        <!-- ==================== DASHBOARD ==================== -->
+        <section class="view" id="view-dashboard" data-view="dashboard" aria-labelledby="dashboardTitle">
+          <div class="page-heading">
+            <div class="heading-copy">
+              <p class="eyebrow"><span class="eyebrow-line"></span>FINANCIAL INTELLIGENCE · 工作台</p>
+              <h1 id="dashboardTitle">财务智能分析工作台</h1>
+              <p class="page-subtitle" id="dashboardSubtitle">从数据到证据，再到可讨论的经营方案。所有关键数字由后端确定性计算，异常只作为核查信号。</p>
+            </div>
+            <div class="page-actions">
+              <button class="button button-ghost" type="button" id="loadDemoBtn" title="重新加载澄海智造演示分析">
+                载入演示分析
+              </button>
+              <button class="button button-secondary" type="button" id="dashboardReportBtn">
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#i-file"></use></svg>
+                查看报告
+              </button>
+              <button class="button button-primary" type="button" data-route="import">
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#i-plus"></use></svg>
+                导入新数据
+              </button>
+            </div>
+          </div>
+
+          <section class="workspace-strip" id="dashboardContext" aria-label="当前组织与分析上下文">
+            <div class="entity">
+              <span class="entity-mark" id="dashboardEntityMark">澄</span>
+              <div class="entity-copy">
+                <strong id="dashboardEntityName">澄海智造股份有限公司</strong>
+                <span id="dashboardEntitySub">虚构示例组织 · 本地演示</span>
+              </div>
+            </div>
+            <div class="strip-meta">
+              <div><span>分析期间</span><strong id="dashboardPeriod">2025 前三季度</strong></div>
+              <div><span>数据文件</span><strong id="dashboardFiles">4 份 · 已解析</strong></div>
+              <div><span>最近分析</span><strong id="dashboardUpdated">—</strong></div>
+            </div>
+            <span class="status-badge status-warning" id="dashboardStatusBadge"><span class="status-symbol">▲</span>等待人工复核</span>
+          </section>
+
+          <div class="kpi-grid" id="dashboardKpiGrid" aria-label="核心财务指标">
+            <article class="kpi-card">
+              <div class="kpi-head"><span>营业收入</span><span class="kpi-period">9M 2025</span></div>
+              <div class="kpi-value">¥12,840<span class="unit">万</span></div>
+              <div class="kpi-foot">
+                <span class="delta delta-good">↑ 8.6% <span>同比</span></span>
+                <div class="sparkline" data-spark="10420,10980,11360,11800,12120,12480,12840" aria-hidden="true"></div>
+              </div>
+              <p class="kpi-note">示例数据 · 上年同期 ¥11,823 万</p>
+            </article>
+            <article class="kpi-card">
+              <div class="kpi-head"><span>营业成本</span><span class="kpi-period">9M 2025</span></div>
+              <div class="kpi-value">¥8,808<span class="unit">万</span></div>
+              <div class="kpi-foot">
+                <span class="delta delta-bad">↑ 13.0% <span>同比</span></span>
+                <div class="sparkline" data-spark="6000,6250,6500,6800,7050,7290,7510" aria-hidden="true"></div>
+              </div>
+              <p class="kpi-note">增速高于收入 4.4pp</p>
+            </article>
+            <article class="kpi-card">
+              <div class="kpi-head"><span>毛利率</span><span class="kpi-period">9M 2025</span></div>
+              <div class="kpi-value">31.4<span class="unit">%</span></div>
+              <div class="kpi-foot">
+                <span class="delta delta-bad">↓ 2.7pp <span>同比</span></span>
+                <div class="sparkline" data-spark="35.1,34.4,33.6,33.2,32.6,32.1,31.4" aria-hidden="true"></div>
+              </div>
+              <p class="kpi-note">上年同期 34.1% · 成本相关</p>
+            </article>
+            <article class="kpi-card">
+              <div class="kpi-head"><span>净利润</span><span class="kpi-period">9M 2025</span></div>
+              <div class="kpi-value">¥1,268<span class="unit">万</span></div>
+              <div class="kpi-foot">
+                <span class="delta delta-bad">↓ 11.8% <span>同比</span></span>
+                <div class="sparkline" data-spark="560,548,532,510,492,470,445" aria-hidden="true"></div>
+              </div>
+              <p class="kpi-note">净利率 9.9% · 上年同期 12.2%</p>
+            </article>
+            <article class="kpi-card">
+              <div class="kpi-head"><span>经营现金流</span><span class="kpi-period">9M 2025</span></div>
+              <div class="kpi-value">¥986<span class="unit">万</span></div>
+              <div class="kpi-foot">
+                <span class="delta delta-bad">↓ 24.5% <span>同比</span></span>
+                <div class="sparkline" data-spark="520,498,472,450,425,402,376" aria-hidden="true"></div>
+              </div>
+              <p class="kpi-note">OCF / 净利润 0.78 · 现金流承压</p>
+            </article>
+          </div>
+
+          <div class="dashboard-layout">
+            <div class="dashboard-main">
+              <article class="card current-analysis-card" id="dashboardAnalysisCard">
+                <div class="card-header">
+                  <div>
+                    <div class="card-kicker">进行中的分析 · RUN-20251024-03</div>
+                    <h2 class="card-title">利润背离诊断</h2>
+                  </div>
+                  <span class="status-badge status-warning"><span class="status-symbol">▲</span>待人工复核</span>
+                </div>
+                <div class="current-analysis-body">
+                  <div class="analysis-summary">
+                    <p class="label-small">分析目标</p>
+                    <p class="analysis-goal">“评估 2025 前三季度收入增长与利润下滑的背离，定位可核查的异常，并模拟一组改善方案。”</p>
+                    <div class="analysis-facts">
+                      <div><strong>6</strong><span>异常候选</span></div>
+                      <div><strong>12/16</strong><span>证据已定位</span></div>
+                      <div><strong>7</strong><span>工具调用</span></div>
+                    </div>
+                    <p class="analysis-note"><span class="inline-warning">暂停点</span> 其他应收款的对手方与性质尚未披露，Agent 已停止生成确定结论。</p>
+                    <div class="inline-actions">
+                      <button class="button button-primary button-sm" type="button" data-route="agent">
+                        打开 Agent 工作区
+                        <svg class="icon icon-sm" aria-hidden="true"><use href="#i-arrow-right"></use></svg>
+                      </button>
+                      <button class="button button-ghost button-sm" type="button" data-route="report">查看报告草稿</button>
+                    </div>
+                  </div>
+                  <div class="progression">
+                    <div class="progression-head">
+                      <span>执行进度</span>
+                      <strong>6 / 8 步</strong>
+                    </div>
+                    <div class="progress-track" role="progressbar" aria-label="分析执行进度" aria-valuemin="0" aria-valuemax="8" aria-valuenow="6">
+                      <span class="progress-fill" style="width: 75%"></span>
+                    </div>
+                    <ol class="progress-list">
+                      <li class="is-complete"><span class="progress-marker"><svg class="icon icon-xs" aria-hidden="true"><use href="#i-check"></use></svg></span><div><strong>数据质量检查</strong><span>4 个文件 · 3 个警告</span></div><em>完成</em></li>
+                      <li class="is-complete"><span class="progress-marker"><svg class="icon icon-xs" aria-hidden="true"><use href="#i-check"></use></svg></span><div><strong>指标与跨期比较</strong><span>12 项指标 · 3 个期间</span></div><em>完成</em></li>
+                      <li class="is-complete"><span class="progress-marker"><svg class="icon icon-xs" aria-hidden="true"><use href="#i-check"></use></svg></span><div><strong>异常检测与证据核验</strong><span>6 条候选 · 4 条已定位</span></div><em>完成</em></li>
+                      <li class="is-complete"><span class="progress-marker"><svg class="icon icon-xs" aria-hidden="true"><use href="#i-check"></use></svg></span><div><strong>经营情景模拟</strong><span>默认方案 · 3 个参数</span></div><em>完成</em></li>
+                      <li class="is-warning"><span class="progress-marker"><span class="status-symbol">▲</span></span><div><strong>报告结论核验</strong><span>2 个问题需人工补充信息</span></div><em>待复核</em></li>
+                    </ol>
+                  </div>
+                </div>
+              </article>
+
+              <article class="card chart-card" id="dashboardChartCard">
+                <div class="card-header">
+                  <div>
+                    <div class="card-kicker" id="dashboardChartKicker">真实计算 · 数据驱动</div>
+                    <h2 class="card-title" id="dashboardChartTitle">营收在增长，毛利率在收缩</h2>
+                  </div>
+                  <button class="text-link" type="button" data-route="metrics">查看指标分析 <svg class="icon icon-xs" aria-hidden="true"><use href="#i-arrow-right"></use></svg></button>
+                </div>
+                <div class="chart-pair">
+                  <div class="mini-chart">
+                    <div class="mini-chart-head"><span>营业收入</span><strong>¥12,840 万</strong></div>
+                    <div class="chart" id="dashboardRevenueChart" aria-label="2024 年第一季度至 2025 年第三季度营业收入柱状图"></div>
+                    <details class="viz-data"><summary>查看数据表</summary><div id="dashboardRevenueTable"></div></details>
+                  </div>
+                  <div class="mini-chart">
+                    <div class="mini-chart-head"><span>毛利率</span><strong>31.4%</strong></div>
+                    <div class="chart" id="dashboardMarginChart" aria-label="2024 年第一季度至 2025 年第三季度毛利率折线图"></div>
+                    <details class="viz-data"><summary>查看数据表</summary><div id="dashboardMarginTable"></div></details>
+                  </div>
+                </div>
+                <div class="chart-insight">
+                  <span class="insight-label">观察</span>
+                  <p id="dashboardChartNote">正在加载由后端计算的数据。</p>
+                </div>
+              </article>
+            </div>
+
+            <aside class="dashboard-rail">
+              <article class="card radar-card">
+                <div class="card-header">
+                  <div>
+                    <div class="card-kicker">RISK SIGNALS</div>
+                    <h2 class="card-title">异常雷达</h2>
+                  </div>
+                  <button class="text-link" type="button" data-route="anomalies">全部 6 条 <svg class="icon icon-xs" aria-hidden="true"><use href="#i-arrow-right"></use></svg></button>
+                </div>
+                <div class="risk-summary" id="dashboardRiskSummary">
+                  <div class="risk-stat risk-high"><strong id="dashboardRiskHigh">0</strong><span>高风险</span></div>
+                  <div class="risk-stat risk-medium"><strong id="dashboardRiskMedium">0</strong><span>中风险</span></div>
+                  <div class="risk-stat risk-low"><strong id="dashboardRiskLow">0</strong><span>待补证</span></div>
+                </div>
+                <div class="anomaly-mini-list" id="dashboardAnomalyList">
+                  <button class="anomaly-mini" type="button" data-anomaly-open="A-01">
+                    <span class="risk-pill risk-high"><span class="status-symbol">■</span>高</span>
+                    <span class="anomaly-mini-copy"><strong>应收账款增速显著高于营收</strong><span>+38.2% vs +8.6% · AR-01</span></span>
+                    <svg class="icon icon-sm" aria-hidden="true"><use href="#i-chevron-right"></use></svg>
+                  </button>
+                  <button class="anomaly-mini" type="button" data-anomaly-open="A-02">
+                    <span class="risk-pill risk-high"><span class="status-symbol">■</span>高</span>
+                    <span class="anomaly-mini-copy"><strong>经营现金流与净利润背离</strong><span>OCF/NP 0.78 · CF-01</span></span>
+                    <svg class="icon icon-sm" aria-hidden="true"><use href="#i-chevron-right"></use></svg>
+                  </button>
+                  <button class="anomaly-mini" type="button" data-anomaly-open="A-06">
+                    <span class="risk-pill risk-low"><span class="status-symbol">◇</span>待补证</span>
+                    <span class="anomaly-mini-copy"><strong>其他应收款规模快速上升</strong><span>+62.3% · OR-01</span></span>
+                    <svg class="icon icon-sm" aria-hidden="true"><use href="#i-chevron-right"></use></svg>
+                  </button>
+                </div>
+                <div class="radar-footnote">
+                  <svg class="icon icon-sm" aria-hidden="true"><use href="#i-info"></use></svg>
+                  异常是核查信号，不等同于舞弊或违法结论。
+                </div>
+              </article>
+
+              <article class="card recent-card">
+                <div class="card-header">
+                  <div>
+                    <div class="card-kicker">RECENT RUNS</div>
+                    <h2 class="card-title">最近的分析任务</h2>
+                  </div>
+                </div>
+                <div class="recent-list" id="recentAnalysisList">
+                  <button class="recent-row" type="button" data-route="agent">
+                    <span class="recent-status status-warning"><span class="status-symbol">▲</span></span>
+                    <span class="recent-copy"><strong>利润背离诊断</strong><span>RUN-20251024-03 · 10/24 16:20</span></span>
+                    <span class="status-badge status-warning">待复核</span>
+                  </button>
+                  <button class="recent-row" type="button" data-route="agent">
+                    <span class="recent-status status-good"><span class="status-symbol">✓</span></span>
+                    <span class="recent-copy"><strong>现金流质量核查</strong><span>RUN-20251018-02 · 10/18 11:05</span></span>
+                    <span class="status-badge status-good">已完成</span>
+                  </button>
+                  <button class="recent-row" type="button" data-route="report">
+                    <span class="recent-status status-neutral"><span class="status-symbol">○</span></span>
+                    <span class="recent-copy"><strong>费用结构专项</strong><span>RUN-20250930-01 · 09/30 09:42</span></span>
+                    <span class="status-badge status-neutral">已归档</span>
+                  </button>
+                </div>
+                <div class="recent-footer" id="recentFooter">点击任务可切换并读取真实后端执行状态。</div>
+              </article>
+            </aside>
+          </div>
+        </section>
+
+        <!-- ==================== IMPORT ==================== -->
+        <section class="view" id="view-import" data-view="import" aria-labelledby="importTitle" hidden>
+          <div class="page-heading">
+            <div class="heading-copy">
+              <p class="eyebrow"><span class="eyebrow-line"></span>DATA INTAKE · 数据接入</p>
+              <h1 id="importTitle">上传、校验，再让 Agent 计算</h1>
+              <p class="page-subtitle">支持 CSV、XLSX 与基础文本型 PDF。解析、字段映射、缺失值和勾稽检查均由后端执行；空白值不会被当作 0。</p>
+            </div>
+            <div class="page-actions">
+              <a class="button button-secondary" href="/api/demo/sample.xlsx" download>
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#i-download"></use></svg>
+                下载示例 XLSX
+              </a>
+              <button class="button button-secondary" type="button" id="loadSampleDatasetBtn">
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#i-database"></use></svg>
+                载入星禾商贸示例
+              </button>
+              <button class="button button-primary" type="button" id="createAnalysisBtn" disabled>
+                创建 Agent 分析
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#i-arrow-right"></use></svg>
+              </button>
+            </div>
+          </div>
+
+          <ol class="workflow-steps" id="importWorkflow" aria-label="导入流程">
+            <li id="workflowUpload" class="is-current"><span class="workflow-index">1</span><div><strong>上传 / 选择数据集</strong><span>CSV、XLSX、文本型 PDF</span></div></li>
+            <li id="workflowMapping"><span class="workflow-index">2</span><div><strong>字段映射</strong><span>人工确认模糊字段</span></div></li>
+            <li id="workflowQuality"><span class="workflow-index">3</span><div><strong>质量检查</strong><span>缺失、无效、期间、勾稽</span></div></li>
+            <li id="workflowAnalysis"><span class="workflow-index">4</span><div><strong>开始分析</strong><span>真实工具执行</span></div></li>
+          </ol>
+
+          <div class="notice-bar notice-warning" id="importNotice">
+            <svg class="icon" aria-hidden="true"><use href="#i-info"></use></svg>
+            <div><strong id="importNoticeTitle">文件解析在本机后端执行</strong><span id="importNoticeText">只有在你点击“上传并解析”后，所选文件才会发送到本机 FastAPI 服务；不会上传到第三方。PDF 仅支持可提取文本的简单报表。</span></div>
+            <span class="demo-inline" id="importModeBadge">LOCAL</span>
+          </div>
+
+          <div class="import-layout">
+            <article class="card upload-card">
+              <div class="card-header">
+                <div>
+                  <div class="card-kicker">STEP 01 · FILE INPUT</div>
+                  <h2 class="card-title">选择本地文件</h2>
+                </div>
+                <span class="status-badge status-neutral" id="uploadStatusBadge"><span class="status-symbol">○</span>等待文件</span>
+              </div>
+              <label class="field-stack" for="companyInput">
+                <span class="field-label">企业名称</span>
+                <input class="text-input" id="companyInput" type="text" value="星禾商贸有限公司" maxlength="120" placeholder="输入企业或演示主体名称">
+              </label>
+              <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="选择财务文件">
+                <input type="file" id="fileInput" multiple accept=".csv,.xlsx,.pdf" class="visually-hidden">
+                <span class="dropzone-icon"><svg class="icon icon-lg" aria-hidden="true"><use href="#i-upload"></use></svg></span>
+                <strong>拖放文件到这里，或点击选择</strong>
+                <span>单文件 ≤ 20 MB · 一次最多 8 个</span>
+                <span class="dropzone-hint">支持长表（报表/期间/科目/金额/单位）和带期间列的宽表；无法识别的字段必须人工确认。</span>
+              </div>
+              <div class="file-queue-head">
+                <span>待上传文件</span>
+                <span id="fileQueueMeta">尚未选择文件</span>
+              </div>
+              <div class="file-queue" id="fileQueue">
+                <div class="empty-state compact">选择文件后显示文件名、大小与上传状态；未上传前不会读取内容。</div>
+              </div>
+              <div class="upload-actions">
+                <button class="button button-primary button-sm" type="button" id="uploadFilesBtn" disabled>
+                  上传并解析
+                  <svg class="icon icon-sm" aria-hidden="true"><use href="#i-upload"></use></svg>
+                </button>
+                <span class="helper-text" id="uploadHelperText">文件保存在本机 data/uploads 目录。</span>
+              </div>
+            </article>
+
+            <article class="card quality-overview-card">
+              <div class="card-header">
+                <div>
+                  <div class="card-kicker">CURRENT DATASET</div>
+                  <h2 class="card-title">数据质量与来源</h2>
+                </div>
+                <span class="status-badge status-neutral" id="qualityStatusBadge"><span class="status-symbol">○</span>未加载</span>
+              </div>
+              <div id="qualityOverview">
+                <div class="empty-state">上传文件或载入星禾商贸示例后，这里显示真实解析结果。</div>
+              </div>
+            </article>
+          </div>
+
+          <article class="card mapping-card">
+            <div class="card-header">
+              <div>
+                <div class="card-kicker">STEP 02 · FIELD MAPPING</div>
+                <h2 class="card-title">字段映射与人工确认</h2>
+              </div>
+              <div class="header-tools">
+                <span class="status-badge status-neutral" id="mappingStatusBadge">未加载</span>
+                <span class="helper-text">“暂收款”等含义不明确的科目不会自动映射</span>
+              </div>
+            </div>
+            <div id="mappingContent">
+              <div class="empty-state">解析完成后展示列映射、科目映射和待确认项。</div>
+            </div>
+          </article>
+
+          <div class="import-bottom">
+            <article class="card checks-card">
+              <div class="card-header">
+                <div>
+                  <div class="card-kicker">STEP 03 · VALIDATION</div>
+                  <h2 class="card-title">数据质量检查</h2>
+                </div>
+                <span class="status-badge status-neutral" id="checksStatusBadge">未加载</span>
+              </div>
+              <div id="qualityChecks">
+                <div class="empty-state">校验结果来自后端，包含阻塞、警告和提示。</div>
+              </div>
+            </article>
+
+            <article class="card raw-card">
+              <div class="card-header">
+                <div>
+                  <div class="card-kicker">RAW PREVIEW</div>
+                  <h2 class="card-title">原始数据预览</h2>
+                </div>
+                <span class="helper-text" id="rawPreviewMeta">最多展示前 8 行</span>
+              </div>
+              <div class="tab-list tab-list-inline" id="rawTabs" role="tablist" aria-label="原始数据表切换">
+                <button class="tab is-active" type="button" role="tab" aria-selected="true" data-raw-tab="0">等待数据</button>
+              </div>
+              <div class="table-wrap raw-table-wrap" id="rawTableWrap">
+                <div class="empty-state compact">解析完成后展示原始工作表内容。</div>
+              </div>
+              <div class="raw-legend"><span><i class="legend-box legend-warning"></i>警告</span><span><i class="legend-box legend-danger"></i>阻塞/无效</span><span><i class="legend-box legend-good"></i>正常</span></div>
+            </article>
+          </div>
+
+          <div class="action-bar">
+            <div class="action-bar-copy">
+              <svg class="icon icon-sm" aria-hidden="true"><use href="#i-shield"></use></svg>
+              <span id="selectedDatasetLabel">尚未选择可分析的数据集。演示数据集只读；请上传文件或载入星禾商贸示例。</span>
+            </div>
+            <div class="inline-actions">
+              <button class="button button-secondary" type="button" id="resetImportBtn">清空当前导入</button>
+              <button class="button button-primary" type="button" id="createAnalysisBtnBottom" disabled>
+                创建 Agent 分析
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#i-arrow-right"></use></svg>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== AGENT ==================== -->
+        <section class="view" id="view-agent" data-view="agent" aria-labelledby="agentPageTitle" hidden>
+          <div class="page-heading page-heading-compact">
+            <div class="heading-copy">
+              <p class="eyebrow"><span class="eyebrow-line"></span>AGENT WORKSPACE · <span id="agentRunLabel">RUN-20251024-03</span></p>
+              <h1 id="agentPageTitle">利润背离诊断</h1>
+              <p class="page-subtitle" id="agentPageSubtitle">观察 Agent 如何规划、调用工具、核验证据，并在证据不足时停下来。</p>
+            </div>
+            <div class="page-actions">
+              <label class="select-wrap">
+                <span class="select-label">分析任务</span>
+                <select class="select" id="analysisSelect" aria-label="切换分析任务">
+                  <option value="">正在加载…</option>
+                </select>
+              </label>
+              <button class="button button-secondary" type="button" id="presentationBtn">
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#i-info"></use></svg>
+                讲解模式
+              </button>
+              <button class="button button-secondary" type="button" id="agentReportBtn">
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#i-file"></use></svg>
+                查看报告
+              </button>
+            </div>
+          </div>
+
+          <div class="agent-preview-banner" id="agentPreviewBanner">
+            <svg class="icon" aria-hidden="true"><use href="#i-info"></use></svg>
+            <div>
+              <strong id="agentPreviewTitle">正在加载真实 Agent 执行记录…</strong>
+              <span id="agentPreviewText">页面将读取后端保存的计划、工具参数、结果与证据，不使用预置动画。</span>
+            </div>
+            <span class="demo-inline" id="agentPreviewBadge">CONNECTING</span>
+          </div>
+
+          <div class="agent-action-bar" id="agentActionBar">
+            <div class="agent-action-copy">
+              <span class="status-badge status-neutral" id="agentNextActionBadge">待执行</span>
+              <span id="agentActionHint">创建分析后，可单步执行或运行到暂停点。</span>
+            </div>
+            <div class="inline-actions">
+              <button class="button button-secondary button-sm" type="button" id="agentStepBtn" disabled>单步执行</button>
+              <button class="button button-primary button-sm" type="button" id="agentRunBtn" disabled>运行到暂停 / 完成</button>
+              <button class="button button-primary button-sm" type="button" id="agentReviewBtn" hidden>确认限制并继续</button>
+              <button class="button button-secondary button-sm" type="button" id="agentImportBtn" hidden>补充 / 重新导入</button>
+              <button class="button button-secondary button-sm" type="button" id="agentResetBtn" disabled>重新执行</button>
+            </div>
+          </div>
+
+          <div class="agent-summary">
+            <div class="summary-item"><span>运行状态</span><strong id="agentStatusText">加载中</strong><span class="status-badge status-neutral" id="agentStatusBadge">正在连接</span></div>
+            <div class="summary-item"><span>分析范围</span><strong id="agentPeriodText">—</strong><span id="agentPeriodNote">—</span></div>
+            <div class="summary-item"><span>可追溯证据</span><strong id="agentEvidenceCoverage">—</strong><span id="agentEvidenceNote">—</span></div>
+            <div class="summary-item"><span>运行模式</span><strong id="agentModeText">—</strong><span id="agentModeNote">—</span></div>
+          </div>
+
+          <div class="agent-layout">
+            <aside class="agent-sidebar">
+              <article class="card agent-goal-card">
+                <div class="card-kicker">ANALYSIS BRIEF</div>
+                <h2 class="card-title">分析目标与约束</h2>
+                <blockquote class="goal-quote" id="agentGoal">“评估 2025 前三季度收入增长与利润下滑的背离，定位可核查的异常，并模拟一组改善方案。”</blockquote>
+                <div class="constraint-list" id="agentConstraints">
+                  <span class="constraint-chip"><svg class="icon icon-xs" aria-hidden="true"><use href="#i-check"></use></svg>仅用已上传报表</span>
+                  <span class="constraint-chip"><svg class="icon icon-xs" aria-hidden="true"><use href="#i-check"></use></svg>不做舞弊定性</span>
+                  <span class="constraint-chip"><svg class="icon icon-xs" aria-hidden="true"><use href="#i-check"></use></svg>模拟需标注假设</span>
+                </div>
+                <dl class="goal-meta">
+                  <div><dt>期间</dt><dd id="agentPeriodMeta">—</dd></div>
+                  <div><dt>主体</dt><dd id="agentCompanyMeta">—</dd></div>
+                  <div><dt>运行编号</dt><dd class="mono" id="agentRunMeta">RUN-20251024-03</dd></div>
+                </dl>
+              </article>
+
+              <article class="card agent-plan-card">
+                <div class="card-header">
+                  <div>
+                    <div class="card-kicker">PLAN · AGENT GENERATED</div>
+                    <h2 class="card-title">任务计划</h2>
+                  </div>
+                  <span class="status-badge status-neutral" id="agentPlanBadge">真实计划</span>
+                </div>
+                <div class="plan-progress">
+                  <span id="agentProgressText">6 / 8 步完成</span>
+                  <span id="agentFindingCount">6 条异常候选</span>
+                </div>
+                <div class="progress-track progress-track-thin" role="progressbar" aria-label="任务计划完成进度" aria-valuemin="0" aria-valuemax="8" aria-valuenow="6" id="agentProgressBar">
+                  <span class="progress-fill" style="width: 75%"></span>
+                </div>
+                <ol class="plan-list" id="agentPlan"></ol>
+                <div class="plan-footnote" id="agentPauseNote">
+                  <svg class="icon icon-sm" aria-hidden="true"><use href="#i-alert"></use></svg>
+                  <span>暂停原因：其他应收款对手方信息缺失，Agent 不能据此生成确定结论。</span>
+                </div>
+              </article>
+
+              <article class="card agent-tools-card">
+                <div class="card-header">
+                  <div>
+                    <div class="card-kicker">TOOL CALLS</div>
+                    <h2 class="card-title">已调用工具</h2>
+                  </div>
+                  <span class="status-badge status-neutral" id="agentToolsBadge">真实调用</span>
+                </div>
+                <div class="tool-list" id="agentTools"></div>
+                <p class="tool-footnote">正式版中，每次调用都会记录参数、结果摘要、耗时与证据编号。</p>
+              </article>
+            </aside>
+
+            <div class="agent-main">
+              <article class="card timeline-card">
+                <div class="card-header timeline-header">
+                  <div>
+                    <div class="card-kicker">EXECUTION TIMELINE</div>
+                    <h2 class="card-title">执行时间线</h2>
+                  </div>
+                  <div class="timeline-controls">
+                    <span class="status-badge status-warning" id="timelineStatusBadge"><span class="status-symbol">▲</span>暂停于第 06 步</span>
+                    <button class="button button-ghost button-sm" type="button" id="timelineToggleAll">全部展开</button>
+                  </div>
+                </div>
+                <div class="timeline" id="agentTimeline" aria-live="polite"></div>
+              </article>
+
+              <div class="agent-bottom-grid">
+                <article class="card pending-card">
+                  <div class="card-header">
+                    <div>
+                      <div class="card-kicker">HUMAN INPUT NEEDED</div>
+                      <h2 class="card-title" id="agentPendingTitle">待核验问题</h2>
+                    </div>
+                    <span class="status-badge status-warning" id="agentPendingCount">3 项</span>
+                  </div>
+                  <div class="pending-list" id="agentPending"></div>
+                  <p class="card-footnote">可确认当前证据边界继续生成报告；补充数据会创建新的分析任务并保留来源。</p>
+                </article>
+
+                <article class="card conclusion-card">
+                  <div class="card-header">
+                    <div>
+                      <div class="card-kicker">DRAFT CONCLUSION</div>
+                      <h2 class="card-title">结论草稿</h2>
+                    </div>
+                    <span class="status-badge status-warning">待复核</span>
+                  </div>
+                  <div class="conclusion-groups" id="agentConclusion"></div>
+                  <div class="evidence-meter">
+                    <div class="evidence-meter-head"><span>执行与证据</span><strong id="agentEvidenceMeterText">—</strong></div>
+                    <div class="progress-track progress-track-thin"><span class="progress-fill evidence-fill" style="width: 0%"></span></div>
+                    <p id="agentEvidenceMeterNote">运行后显示可追溯证据与待核验项。</p>
+                  </div>
+                </article>
+              </div>
+
+              <article class="card llm-card">
+                <div class="card-header">
+                  <div>
+                    <div class="card-kicker">LLM INTERPRETATION</div>
+                    <h2 class="card-title">AI 解读</h2>
+                  </div>
+                  <span class="status-badge status-neutral" id="llmInsightBadge">未配置</span>
+                </div>
+                <div class="llm-toolbar">
+                  <div class="agent-action-copy">
+                    <span class="status-badge status-neutral" id="llmModeBadge">本地模式</span>
+                    <span id="llmScopeText">未配置远程模型；AI 解读不可用。</span>
+                  </div>
+                  <button class="button button-primary button-sm" type="button" id="llmInsightBtn" disabled>
+                    生成 AI 解读
+                    <svg class="icon icon-sm" aria-hidden="true"><use href="#i-arrow-right"></use></svg>
+                  </button>
+                </div>
+                <div id="llmInsightContent">
+                  <div class="empty-state compact">配置 .env 后，可基于当前指标方向、规则状态与待核验事项生成定性解读。数字仍由程序计算。</div>
+                </div>
+                <p class="card-footnote">模型输出会拒绝数字与定性结论；它只辅助解释，不替代 Agent 计算和人工复核。</p>
+              </article>
+            </div>
+          </div>
+        </section>
+        <section class="view" id="view-metrics" data-view="metrics" aria-labelledby="metricsTitle" hidden>
+          <div class="page-heading">
+            <div class="heading-copy">
+              <p class="eyebrow"><span class="eyebrow-line"></span>FINANCIAL METRICS · 指标分析</p>
+              <h1 id="metricsTitle">每个数字，都能回到口径</h1>
+              <p class="page-subtitle" id="metricsSubtitle">统一收入、成本、利润与现金流的口径。趋势与指标表来自当前数据集，不替代正式财务报表。</p>
+            </div>
+            <div class="page-actions">
+              <label class="select-wrap">
+                <span class="select-label">分析期间</span>
+                <select class="select" aria-label="分析期间">
+                  <option>2025 前三季度</option>
+                  <option disabled>2025 全年（未开始）</option>
+                </select>
+              </label>
+              <button class="button button-secondary" type="button" id="exportMetricsBtn">
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#i-download"></use></svg>
+                导出指标 CSV
+              </button>
+            </div>
+          </div>
+
+          <div class="metric-context" id="metricsContext">
+            <span><strong>口径：</strong>合并口径 · 未经审计</span>
+            <span><strong>单位：</strong>人民币万元，比例除外</span>
+            <span><strong>来源：</strong>4 份示例文件</span>
+            <span class="status-badge status-warning"><span class="status-symbol">▲</span>1 项不可计算</span>
+          </div>
+
+          <div class="kpi-grid kpi-grid-compact" id="metricsKpiGrid" aria-label="指标摘要">
+            <article class="kpi-card"><div class="kpi-head"><span>营业收入</span></div><div class="kpi-value">12,840<span class="unit">万</span></div><div class="kpi-foot"><span class="delta delta-good">↑ 8.6%</span><span class="kpi-compare">vs 11,823</span></div></article>
+            <article class="kpi-card"><div class="kpi-head"><span>营业成本</span></div><div class="kpi-value">8,808<span class="unit">万</span></div><div class="kpi-foot"><span class="delta delta-bad">↑ 13.0%</span><span class="kpi-compare">vs 7,793</span></div></article>
+            <article class="kpi-card"><div class="kpi-head"><span>毛利率</span></div><div class="kpi-value">31.4<span class="unit">%</span></div><div class="kpi-foot"><span class="delta delta-bad">↓ 2.7pp</span><span class="kpi-compare">vs 34.1%</span></div></article>
+            <article class="kpi-card"><div class="kpi-head"><span>净利润</span></div><div class="kpi-value">1,268<span class="unit">万</span></div><div class="kpi-foot"><span class="delta delta-bad">↓ 11.8%</span><span class="kpi-compare">vs 1,437</span></div></article>
+            <article class="kpi-card"><div class="kpi-head"><span>经营现金流</span></div><div class="kpi-value">986<span class="unit">万</span></div><div class="kpi-foot"><span class="delta delta-bad">↓ 24.5%</span><span class="kpi-compare">vs 1,306</span></div></article>
+            <article class="kpi-card kpi-card-muted"><div class="kpi-head"><span>存货周转天数</span></div><div class="kpi-value">—</div><div class="kpi-foot"><span class="status-badge status-neutral">不可计算</span><span class="kpi-compare">缺少平均存货</span></div></article>
+          </div>
+
+          <div class="chart-grid">
+            <article class="card chart-card">
+              <div class="card-header">
+                <div>
+                  <div class="card-kicker">REVENUE VS. COST</div>
+                  <h2 class="card-title">收入与成本：差距在扩大</h2>
+                </div>
+                <div class="chart-legend" aria-label="图例">
+                  <span><i class="legend-swatch swatch-1"></i>营业收入</span>
+                  <span><i class="legend-swatch swatch-2"></i>营业成本</span>
+                </div>
+              </div>
+              <div class="chart chart-lg" id="metricRevenueCostChart" aria-label="2024 年第三季度至 2025 年第三季度营业收入与营业成本分组柱状图"></div>
+              <details class="viz-data"><summary>查看图表数据</summary><div id="metricRevenueCostTable"></div></details>
+              <p class="chart-note">成本增速 13.0% 高于收入增速 8.6%；单看收入增长会掩盖毛利空间收窄。</p>
+            </article>
+
+            <article class="card chart-card">
+              <div class="card-header">
+                <div>
+                  <div class="card-kicker">GROSS MARGIN</div>
+                  <h2 class="card-title">毛利率连续三个期间收缩</h2>
+                </div>
+                <span class="status-badge status-warning">-2.7pp YoY</span>
+              </div>
+              <div class="chart chart-lg" id="metricMarginChart" aria-label="2024 年第一季度至 2025 年第三季度毛利率折线图"></div>
+              <details class="viz-data"><summary>查看图表数据</summary><div id="metricMarginTable"></div></details>
+              <p class="chart-note">2025Q3 降至 28.9%，为近七个季度最低。需结合产品组合、原材料与返利政策解释。</p>
+            </article>
+          </div>
+
+          <article class="card metrics-table-card">
+            <div class="card-header">
+              <div>
+                <div class="card-kicker">METRIC DETAILS</div>
+                <h2 class="card-title">指标明细与计算依据</h2>
+              </div>
+              <div class="header-tools">
+                <span class="helper-text">金额单位：人民币万元</span>
+                <button class="button button-ghost button-sm" type="button" id="metricGlossaryBtn">指标字典</button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table metrics-table">
+                <caption class="visually-hidden">2025 前三季度财务指标明细</caption>
+                <thead>
+                  <tr><th scope="col">指标</th><th scope="col">2024 前三季度</th><th scope="col">2025 前三季度</th><th scope="col">变化</th><th scope="col">计算依据 / 口径</th><th scope="col">状态</th></tr>
+                </thead>
+                <tbody id="metricsTableBody">
+                  <tr><td><span class="cell-primary">营业收入</span></td><td class="num">11,823</td><td class="num">12,840</td><td><span class="delta delta-good">+8.6%</span></td><td class="formula">本期 / 上年同期 - 1 · 利润表</td><td><span class="status-badge status-good">可计算</span></td></tr>
+                  <tr><td><span class="cell-primary">营业成本</span></td><td class="num">7,793</td><td class="num">8,808</td><td><span class="delta delta-bad">+13.0%</span></td><td class="formula">利润表 · 营业成本</td><td><span class="status-badge status-good">可计算</span></td></tr>
+                  <tr><td><span class="cell-primary">毛利</span></td><td class="num">4,030</td><td class="num">4,032</td><td><span class="delta delta-neutral">+0.0%</span></td><td class="formula">营业收入 - 营业成本</td><td><span class="status-badge status-good">可计算</span></td></tr>
+                  <tr><td><span class="cell-primary">毛利率</span></td><td class="num">34.1%</td><td class="num">31.4%</td><td><span class="delta delta-bad">-2.7pp</span></td><td class="formula">毛利 / 营业收入</td><td><span class="status-badge status-good">可计算</span></td></tr>
+                  <tr><td><span class="cell-primary">销售费用率</span></td><td class="num">10.6%</td><td class="num">7.8%</td><td><span class="delta delta-neutral">-2.8pp</span></td><td class="formula">销售费用 / 营业收入 · 费用明细</td><td><span class="status-badge status-warning"><span class="status-symbol">▲</span>需确认口径</span></td></tr>
+                  <tr><td><span class="cell-primary">净利润</span></td><td class="num">1,437</td><td class="num">1,268</td><td><span class="delta delta-bad">-11.8%</span></td><td class="formula">利润表 · 归母净利润</td><td><span class="status-badge status-good">可计算</span></td></tr>
+                  <tr><td><span class="cell-primary">净利率</span></td><td class="num">12.2%</td><td class="num">9.9%</td><td><span class="delta delta-bad">-2.3pp</span></td><td class="formula">净利润 / 营业收入</td><td><span class="status-badge status-good">可计算</span></td></tr>
+                  <tr><td><span class="cell-primary">经营现金流</span></td><td class="num">1,306</td><td class="num">986</td><td><span class="delta delta-bad">-24.5%</span></td><td class="formula">现金流量表 · 经营活动净额</td><td><span class="status-badge status-good">可计算</span></td></tr>
+                  <tr><td><span class="cell-primary">OCF / 净利润</span></td><td class="num">0.91</td><td class="num">0.78</td><td><span class="delta delta-bad">-0.13</span></td><td class="formula">经营现金流 / 净利润</td><td><span class="status-badge status-good">可计算</span></td></tr>
+                  <tr><td><span class="cell-primary">应收账款周转天数</span></td><td class="num">63.5 天</td><td class="num">80.8 天</td><td><span class="delta delta-bad">+17.3 天</span></td><td class="formula">期末应收 / 营业收入 × 270 天 · 期末口径</td><td><span class="status-badge status-warning">口径限制</span></td></tr>
+                  <tr class="row-muted"><td><span class="cell-primary">存货周转天数</span></td><td class="num">—</td><td class="num">—</td><td><span class="status-badge status-neutral">不可计算</span></td><td class="formula">缺少平均存货余额与期初明细</td><td><span class="status-badge status-neutral">缺数据</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="table-footnote">
+              <svg class="icon icon-sm" aria-hidden="true"><use href="#i-info"></use></svg>
+              “不可计算”不会被替换为 0；正式版将展示缺失字段及对报告的影响。
+            </div>
+          </article>
+        </section>
+
+        <!-- ==================== ANOMALIES ==================== -->
+        <section class="view" id="view-anomalies" data-view="anomalies" aria-labelledby="anomaliesTitle" hidden>
+          <div class="page-heading">
+            <div class="heading-copy">
+              <p class="eyebrow"><span class="eyebrow-line"></span>ANOMALY DIAGNOSTICS · 异常诊断</p>
+              <h1 id="anomaliesTitle">异常是核查信号，不是结论</h1>
+              <p class="page-subtitle" id="anomaliesSubtitle">每条发现都保留触发规则、关键指标、期间、证据摘要和后续核查建议。连续期间条件不足时不冒充已触发结论。</p>
+            </div>
+            <div class="page-actions">
+              <button class="button button-secondary" type="button" id="copyAnomaliesBtn">
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#i-copy"></use></svg>
+                复制筛选结果
+              </button>
+              <button class="button button-primary" type="button" data-route="report">在报告中查看</button>
+            </div>
+          </div>
+
+          <div class="risk-overview">
+            <article class="risk-overview-card risk-high"><span class="risk-icon"><svg class="icon" aria-hidden="true"><use href="#i-alert"></use></svg></span><div><span>高风险</span><strong id="riskCountHigh">2</strong><small>需优先获取补充证据</small></div></article>
+            <article class="risk-overview-card risk-medium"><span class="risk-icon"><svg class="icon" aria-hidden="true"><use href="#i-info"></use></svg></span><div><span>中风险</span><strong id="riskCountMedium">3</strong><small>建议纳入管理层讨论</small></div></article>
+            <article class="risk-overview-card risk-low"><span class="risk-icon"><svg class="icon" aria-hidden="true"><use href="#i-help"></use></svg></span><div><span>待补证</span><strong id="riskCountLow">1</strong><small>证据不足，暂不升级</small></div></article>
+            <article class="risk-overview-card risk-neutral"><span class="risk-icon"><svg class="icon" aria-hidden="true"><use href="#i-database"></use></svg></span><div><span>异常总计</span><strong id="riskCountTotal">6</strong><small>规则版本 v0.2 · 真实计算</small></div></article>
+          </div>
+
+          <div class="filter-bar">
+            <div class="filter-group" role="group" aria-label="按风险等级筛选">
+              <button class="filter-chip is-active" type="button" data-risk-filter="all">全部 <span>6</span></button>
+              <button class="filter-chip" type="button" data-risk-filter="high">高风险 <span>2</span></button>
+              <button class="filter-chip" type="button" data-risk-filter="medium">中风险 <span>3</span></button>
+              <button class="filter-chip" type="button" data-risk-filter="low">待补证 <span>1</span></button>
+            </div>
+            <label class="search-box">
+              <svg class="icon icon-sm" aria-hidden="true"><use href="#i-search"></use></svg>
+              <span class="visually-hidden">搜索异常</span>
+              <input type="search" id="anomalySearch" placeholder="搜索异常、规则或指标…" autocomplete="off">
+            </label>
+            <span class="filter-result" id="anomalyResultCount">显示 6 条</span>
+          </div>
+
+          <article class="card anomaly-table-card">
+            <div class="table-wrap">
+              <table class="data-table anomaly-table">
+                <caption class="visually-hidden">异常候选清单</caption>
+                <thead>
+                  <tr><th scope="col">异常 / 编号</th><th scope="col">风险</th><th scope="col">触发规则</th><th scope="col">关键指标</th><th scope="col">期间</th><th scope="col">证据摘要</th><th scope="col"><span class="visually-hidden">操作</span></th></tr>
+                </thead>
+                <tbody id="anomalyRows"></tbody>
+              </table>
+            </div>
+            <div class="table-footnote">
+              <svg class="icon icon-sm" aria-hidden="true"><use href="#i-shield"></use></svg>
+              规则触发只说明需要进一步核查，不构成对财务舞弊、违法行为或管理层的任何事实认定。
+            </div>
+          </article>
+        </section>
+
+        <!-- ==================== SCENARIO ==================== -->
+        <section class="view" id="view-scenario" data-view="scenario" aria-labelledby="scenarioTitle" hidden>
+          <div class="page-heading">
+            <div class="heading-copy">
+              <p class="eyebrow"><span class="eyebrow-line"></span>SCENARIO STUDIO · 经营情景模拟</p>
+              <h1 id="scenarioTitle">把假设放在明面上</h1>
+              <p class="page-subtitle">调整收入、成本率与销售费用，由后端确定性函数计算利润敏感度。情景不是经营预测。</p>
+            </div>
+            <div class="page-actions">
+              <span class="status-badge status-neutral" id="scenarioBackendStatus"><span class="status-symbol">○</span>尚未运行</span>
+              <button class="button button-secondary" type="button" id="scenarioReset">
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#i-refresh"></use></svg>
+                重置为基准
+              </button>
+              <button class="button button-primary" type="button" id="scenarioSnapshotBtn">
+                保存为报告快照
+              </button>
+            </div>
+          </div>
+
+          <div class="notice-bar notice-warning" id="scenarioNotice">
+            <svg class="icon" aria-hidden="true"><use href="#i-info"></use></svg>
+            <div><strong>模拟，不是预测</strong><span>结果由后端按当前报表基准和固定假设计算；不含现金流、产能、产品结构与市场约束。</span></div>
+            <span class="demo-inline">DETERMINISTIC</span>
+          </div>
+
+          <div class="scenario-layout">
+            <article class="card parameter-card">
+              <div class="card-header">
+                <div>
+                  <div class="card-kicker">ASSUMPTIONS</div>
+                  <h2 class="card-title">参数面板</h2>
+                </div>
+                <span class="status-badge status-info">服务端参数</span>
+              </div>
+
+              <div class="parameter-group">
+                <div class="parameter-head">
+                  <label for="revChange">营业收入变化率</label>
+                  <output class="parameter-value" id="revChangeOut" for="revChange">+4.0%</output>
+                </div>
+                <input class="range" type="range" id="revChange" min="-15" max="20" step="1" value="4" aria-describedby="revHelp">
+                <div class="range-scale"><span>-15%</span><span>基准 0%</span><span>+20%</span></div>
+                <p class="parameter-help" id="revHelp">在基准营业收入 ¥12,840 万之上调整。</p>
+              </div>
+
+              <div class="parameter-group">
+                <div class="parameter-head">
+                  <label for="costDelta">营业成本率变化</label>
+                  <output class="parameter-value" id="costDeltaOut" for="costDelta">-1.0pp</output>
+                </div>
+                <input class="range" type="range" id="costDelta" min="-4" max="4" step="0.5" value="-1" aria-describedby="costHelp">
+                <div class="range-scale"><span>-4pp</span><span>基准 0</span><span>+4pp</span></div>
+                <p class="parameter-help" id="costHelp">负值表示成本率下降、毛利率改善；正值表示成本压力上升。</p>
+              </div>
+
+              <div class="parameter-group">
+                <div class="parameter-head">
+                  <label for="salesChange">销售费用变化率</label>
+                  <output class="parameter-value" id="salesChangeOut" for="salesChange">+6.0%</output>
+                </div>
+                <input class="range" type="range" id="salesChange" min="-20" max="30" step="1" value="6" aria-describedby="salesHelp">
+                <div class="range-scale"><span>-20%</span><span>基准 0%</span><span>+30%</span></div>
+                <p class="parameter-help" id="salesHelp">假设销售费用随组织投入调整，不含一次性市场费用。</p>
+              </div>
+
+              <div class="preset-block">
+                <span class="preset-label">情景预设</span>
+                <div class="preset-list" id="scenarioPresets">
+                  <button class="preset-chip" type="button" data-preset="cautious">谨慎</button>
+                  <button class="preset-chip" type="button" data-preset="base">基准</button>
+                  <button class="preset-chip" type="button" data-preset="improve">改善</button>
+                  <button class="preset-chip is-active" type="button" data-preset="custom">当前示例</button>
+                </div>
+              </div>
+
+              <div class="assumption-box" id="scenarioAssumptions">
+                <h3>固定假设</h3>
+                <ul>
+                  <li>管理费用 928 万、研发费用 642 万、财务费用 118 万保持不变</li>
+                  <li>其他净收益 350 万，所得税率 25% 保持不变</li>
+                  <li>不含营运资本、产能、汇率与一次性项目影响</li>
+                </ul>
+              </div>
+            </article>
+
+            <div class="scenario-main">
+              <article class="card result-hero-card">
+                <div class="result-hero-head">
+                  <div>
+                    <div class="card-kicker">SIMULATED NET PROFIT · 2025 9M</div>
+                    <h2 class="card-title">模拟净利润</h2>
+                  </div>
+                  <span class="status-badge status-info">服务端计算</span>
+                </div>
+                <div class="result-hero">
+                  <strong id="scenarioNetProfit">¥1,444.0<span>万</span></strong>
+                  <span class="result-delta" id="scenarioNetDelta">+13.9% vs 基准</span>
+                </div>
+                <div class="result-meta">
+                  <div><span>模拟净利率</span><strong id="scenarioNetMargin">10.8%</strong></div>
+                  <div><span>基准净利润</span><strong id="scenarioBaseNetProfit">¥1,268.1 万</strong></div>
+                  <div><span>变化额</span><strong id="scenarioNetChange">+¥176.0 万</strong></div>
+                </div>
+                <div class="compare-chart" aria-label="基准与模拟净利润对比">
+                  <div class="compare-row">
+                    <span class="compare-label">基准</span>
+                    <div class="compare-track"><span class="compare-bar compare-bar-base" id="compareBaseBar"></span></div>
+                    <strong id="compareBaseValue">1,268.1</strong>
+                  </div>
+                  <div class="compare-row">
+                    <span class="compare-label">模拟</span>
+                    <div class="compare-track"><span class="compare-bar compare-bar-sim" id="compareSimBar"></span></div>
+                    <strong id="compareSimValue">1,444.0</strong>
+                  </div>
+                  <div class="compare-axis"><span>0</span><span>单位：万元</span></div>
+                </div>
+              </article>
+
+              <div class="scenario-result-grid">
+                <article class="card result-mini-card"><span>模拟营业收入</span><strong id="scenarioRevenue">¥13,353.6 万</strong><small id="scenarioRevenueDelta">+4.0% vs 基准</small></article>
+                <article class="card result-mini-card"><span>模拟毛利</span><strong id="scenarioGrossProfit">¥4,326.6 万</strong><small id="scenarioGrossMargin">毛利率 32.4%</small></article>
+                <article class="card result-mini-card"><span>模拟销售费用</span><strong id="scenarioSellingExpense">¥1,063.2 万</strong><small id="scenarioSellingDelta">+6.0% vs 基准</small></article>
+                <article class="card result-mini-card"><span>模拟利润总额</span><strong id="scenarioPretax">¥1,925.4 万</strong><small>税率 25%</small></article>
+              </div>
+
+              <article class="card sensitivity-card">
+                <div class="card-header">
+                  <div>
+                    <div class="card-kicker">SENSITIVITY</div>
+                    <h2 class="card-title">净利润敏感度矩阵</h2>
+                  </div>
+                  <span class="helper-text">单位：万元 · 行=收入变化，列=成本率变化 · 后端计算</span>
+                </div>
+                <div class="table-wrap">
+                  <table class="data-table sensitivity-table">
+                    <caption class="visually-hidden">收入变化与成本率变化的净利润敏感度</caption>
+                    <thead><tr><th scope="col">收入变化</th><th scope="col">成本率 -1pp</th><th scope="col">成本率 0</th><th scope="col">成本率 +1pp</th></tr></thead>
+                    <tbody id="sensitivityBody"></tbody>
+                  </table>
+                </div>
+                <p class="table-footnote">当前销售费用变化与固定成本假设保持不变；数字仅用于方法演示。</p>
+              </article>
+
+              <article class="card formula-card">
+                <div class="card-header">
+                  <div>
+                    <div class="card-kicker">TRANSPARENCY</div>
+                    <h2 class="card-title">计算逻辑</h2>
+                  </div>
+                  <span class="status-badge status-good"><span class="status-symbol">✓</span>确定性计算</span>
+                </div>
+                <pre class="formula-block"><code>模拟营业收入 = 12,840 × (1 + 营收变化率)
+模拟毛利率   = 31.4% − 成本率变化（pp）/ 100
+模拟销售费用 = 1,003 × (1 + 销售费用变化率)
+模拟利润总额 = 模拟毛利 − 模拟销售费用 − 928 − 642 − 118 + 350
+模拟净利润   = 模拟利润总额 × (1 − 25%)</code></pre>
+                <p class="formula-note">情景模拟由服务端确定性函数执行；页面、报告与导出使用同一结果。</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== REPORT ==================== -->
+        <section class="view" id="view-report" data-view="report" aria-labelledby="reportTitle" hidden>
+          <div class="page-heading">
+            <div class="heading-copy">
+              <p class="eyebrow"><span class="eyebrow-line"></span>DIAGNOSTIC REPORT · 交付</p>
+              <h1 id="reportTitle">财务诊断报告</h1>
+              <p class="page-subtitle" id="reportPageSubtitle">结构化、可追溯、保留边界。报告由当前分析状态生成，尚未经过人工复核。</p>
+            </div>
+            <div class="page-actions">
+              <button class="button button-secondary" type="button" id="copySummaryBtn">
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#i-copy"></use></svg>
+                复制执行摘要
+              </button>
+              <button class="button button-secondary" type="button" id="printReportBtn">
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#i-print"></use></svg>
+                打印 / PDF
+              </button>
+              <button class="button button-primary" type="button" id="downloadReportBtn">
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#i-download"></use></svg>
+                下载报告
+              </button>
+            </div>
+          </div>
+
+          <div class="notice-bar notice-warning">
+            <svg class="icon" aria-hidden="true"><use href="#i-info"></use></svg>
+            <div><strong>报告草稿 · 待人工复核</strong><span>Markdown 由本地后端根据结构化结果生成；不是正式审计、鉴证或投资建议。</span></div>
+            <span class="status-badge status-warning">待人工复核</span>
+          </div>
+
+          <div class="report-shell">
+            <aside class="report-toc" aria-label="报告目录">
+              <div class="toc-head">
+                <span class="card-kicker">CONTENTS</span>
+                <strong>目录</strong>
+              </div>
+              <nav class="toc-nav" aria-label="报告章节">
+                <a href="#report-exec" data-report-target="report-exec">01 · 执行摘要</a>
+                <a href="#report-quality" data-report-target="report-quality">02 · 数据质量</a>
+                <a href="#report-metrics" data-report-target="report-metrics">03 · 核心指标</a>
+                <a href="#report-findings" data-report-target="report-findings">04 · 异常发现</a>
+                <a href="#report-evidence" data-report-target="report-evidence">05 · 证据与计算</a>
+                <a href="#report-scenario" data-report-target="report-scenario">06 · 情景模拟</a>
+                <a href="#report-actions" data-report-target="report-actions">07 · 后续建议</a>
+                <a href="#report-limits" data-report-target="report-limits">08 · 分析限制</a>
+              </nav>
+              <div class="toc-status" id="reportTocStatus">
+                <div class="toc-status-head"><span>核验状态</span><span class="status-badge status-warning">4 / 6</span></div>
+                <div class="progress-track progress-track-thin"><span class="progress-fill evidence-fill" style="width: 66%"></span></div>
+                <p>2 条异常证据待补充；报告中的结论已与工具结果做示例核对。</p>
+                <dl>
+                  <div><dt>版本</dt><dd>v0.9 · draft</dd></div>
+                  <div><dt>生成</dt><dd>2026-10-24 16:20</dd></div>
+                  <div><dt>运行</dt><dd class="mono">RUN-20251024-03</dd></div>
+                </dl>
+              </div>
+            </aside>
+
+            <div class="report-content">
+              <div class="report-toolbar" id="reportToolbar">
+                <div class="tab-list" id="reportTabs" role="tablist" aria-label="报告视图切换">
+                  <button class="tab is-active" type="button" role="tab" aria-selected="true" data-report-tab="body">报告正文</button>
+                  <button class="tab" type="button" role="tab" aria-selected="false" data-report-tab="appendix">证据附录</button>
+                </div>
+                <span class="report-source" id="reportSource">来源：本地分析 · 金额单位：人民币元/万元</span>
+              </div>
+
+              <article class="report-paper" id="reportBody">
+                <header class="report-cover">
+                  <div class="report-cover-top">
+                    <span class="report-brand">FinGuard</span>
+                    <span class="status-badge status-warning">草稿 · 未复核</span>
+                  </div>
+                  <p class="report-overline">FINANCIAL DIAGNOSTIC REPORT</p>
+                  <h2>利润背离与现金流质量诊断</h2>
+                  <p class="report-subtitle">澄海智造股份有限公司 · 2025 年前三季度</p>
+                  <div class="report-cover-meta">
+                    <div><span>报告编号</span><strong>FG-2025-09-03</strong></div>
+                    <div><span>分析期间</span><strong>2025-01-01 — 2025-09-30</strong></div>
+                    <div><span>编制</span><strong>FinGuard Agent（模拟）</strong></div>
+                    <div><span>复核状态</span><strong>待人工复核</strong></div>
+                  </div>
+                  <p class="report-disclaimer-inline">本报告为教学与辅助分析示例，不构成审计意见、鉴证结论、税务意见或投资建议。</p>
+                </header>
+
+                <section class="report-section" id="report-exec">
+                  <div class="report-section-head"><span>01</span><h3>执行摘要</h3></div>
+                  <p>2025 年前三季度，公司营业收入同比增长 8.6%，但营业成本增长 13.0%，毛利率由 34.1% 降至 31.4%，净利润同比下降 11.8%。收入增长没有转化为利润增长，经营现金流亦由 1,306 万元降至 986 万元。</p>
+                  <div class="exec-findings">
+                    <div class="exec-finding"><span class="exec-index">01</span><div><strong>收入与利润背离</strong><p>收入 +8.6%，毛利基本持平，净利润 -11.8%；成本增速高于收入 4.4pp。<a href="#E-MET-01" class="cite" data-report-target="report-evidence">E-MET-01</a></p></div></div>
+                    <div class="exec-finding"><span class="exec-index">02</span><div><strong>营运资本占用上升</strong><p>应收账款同比 +38.2%，周转天数由 63.5 天升至 80.8 天；现金流量与利润的差距扩大。<a href="#E-AR-01" class="cite" data-report-target="report-evidence">E-AR-01</a></p></div></div>
+                    <div class="exec-finding"><span class="exec-index">03</span><div><strong>需要补充证据，而非下结论</strong><p>其他应收款 +62.3%，对手方性质未披露；9 月收入集中度和费用口径仍需业务资料核验。<a href="#E-OR-01" class="cite" data-report-target="report-evidence">E-OR-01</a></p></div></div>
+                  </div>
+                  <div class="report-callout">
+                    <strong>初步判断</strong>
+                    <p>当前数据支持“成本与营运资本压力上升”的观察，但不足以判断是否存在收入虚构、资金占用或舞弊行为。以下异常均为待核查信号。</p>
+                  </div>
+                </section>
+
+                <section class="report-section" id="report-quality">
+                  <div class="report-section-head"><span>02</span><h3>数据质量</h3></div>
+                  <table class="report-table">
+                    <caption class="visually-hidden">数据质量摘要</caption>
+                    <thead><tr><th scope="col">检查项</th><th scope="col">结果</th><th scope="col">影响</th></tr></thead>
+                    <tbody>
+                      <tr><td>文件完整性</td><td>4 / 4 份</td><td>利润表、资产负债表、现金流量表、费用明细</td></tr>
+                      <tr><td>期间一致性</td><td><span class="status-badge status-good">通过</span></td><td>2025-01-01 至 2025-09-30</td></tr>
+                      <tr><td>资产负债表勾稽</td><td><span class="status-badge status-good">通过</span></td><td>资产 = 负债 + 所有者权益</td></tr>
+                      <tr><td>字段映射</td><td><span class="status-badge status-warning">1 项待确认</span></td><td>“暂收款”未自动匹配，影响其他应收款判断</td></tr>
+                      <tr><td>缺失值</td><td><span class="status-badge status-warning">3 个</span></td><td>非关键费用字段，未补为 0</td></tr>
+                    </tbody>
+                  </table>
+                  <p class="report-note">数据质量评分 92/100。当前异常与报告结论均受上述限制影响。</p>
+                </section>
+
+                <section class="report-section" id="report-metrics">
+                  <div class="report-section-head"><span>03</span><h3>核心指标</h3></div>
+                  <table class="report-table report-metrics-table">
+                    <caption class="visually-hidden">核心财务指标</caption>
+                    <thead><tr><th scope="col">指标</th><th scope="col">2024 前三季度</th><th scope="col">2025 前三季度</th><th scope="col">变化</th></tr></thead>
+                    <tbody>
+                      <tr><td>营业收入</td><td class="num">11,823</td><td class="num">12,840</td><td><span class="delta delta-good">+8.6%</span></td></tr>
+                      <tr><td>营业成本</td><td class="num">7,793</td><td class="num">8,808</td><td><span class="delta delta-bad">+13.0%</span></td></tr>
+                      <tr><td>毛利率</td><td class="num">34.1%</td><td class="num">31.4%</td><td><span class="delta delta-bad">-2.7pp</span></td></tr>
+                      <tr><td>净利润</td><td class="num">1,437</td><td class="num">1,268</td><td><span class="delta delta-bad">-11.8%</span></td></tr>
+                      <tr><td>经营现金流</td><td class="num">1,306</td><td class="num">986</td><td><span class="delta delta-bad">-24.5%</span></td></tr>
+                      <tr><td>OCF / 净利润</td><td class="num">0.91</td><td class="num">0.78</td><td><span class="delta delta-bad">-0.13</span></td></tr>
+                    </tbody>
+                  </table>
+                  <p class="report-note">详细公式与期间口径见指标分析页及证据附录 E-MET-01。</p>
+                </section>
+
+                <section class="report-section" id="report-findings">
+                  <div class="report-section-head"><span>04</span><h3>异常发现</h3></div>
+                  <div class="report-finding">
+                    <div class="report-finding-head"><span class="risk-pill risk-high"><span class="status-symbol">■</span>高风险</span><strong>A-01 应收账款增速显著高于营业收入</strong></div>
+                    <p>应收账款期末余额 3,842 万元，同比增加 1,062 万元（+38.2%），高于收入增速 29.6pp；周转天数从 63.5 天升至 80.8 天。<a href="#E-AR-01" class="cite" data-report-target="report-evidence">E-AR-01</a></p>
+                    <p class="finding-limit">限制：未取得账龄、前五大客户与期后回款数据，不能判断信用政策变化或收入确认问题。</p>
+                  </div>
+                  <div class="report-finding">
+                    <div class="report-finding-head"><span class="risk-pill risk-high"><span class="status-symbol">■</span>高风险</span><strong>A-02 经营现金流与净利润背离</strong></div>
+                    <p>经营现金流 986 万元，低于净利润 1,268 万元，OCF/净利润降至 0.78。应收与其他应收合计增加 1,780 万元，构成营运资本占用。<a href="#E-CF-01" class="cite" data-report-target="report-evidence">E-CF-01</a></p>
+                    <p class="finding-limit">限制：现金流数据未拆分客户与供应商，不能判断具体回款对象与账期变化。</p>
+                  </div>
+                  <div class="report-finding">
+                    <div class="report-finding-head"><span class="risk-pill risk-low"><span class="status-symbol">◇</span>待补证</span><strong>A-06 其他应收款规模快速上升</strong></div>
+                    <p>其他应收款 1,870 万元，同比增加 718 万元（+62.3%），占总资产 8.7%。由于“暂收款”字段未确认，对手方与款项性质无法判断。<a href="#E-OR-01" class="cite" data-report-target="report-evidence">E-OR-01</a></p>
+                    <p class="finding-limit">限制：当前证据不足，严重度未升级，暂不作为确定结论。</p>
+                  </div>
+                  <p class="report-note">另有 3 条中风险异常：毛利率与成本增速背离、销售费用率下降、9 月收入集中。完整清单见异常诊断页。</p>
+                </section>
+
+                <section class="report-section" id="report-evidence">
+                  <div class="report-section-head"><span>05</span><h3>证据与计算过程</h3></div>
+                  <p>报告中的每个关键数字均由工具结果生成，并指向原始数据与计算公式。以下为摘录；完整证据清单见“证据附录”。</p>
+                  <div class="evidence-inline-list">
+                    <div class="evidence-row"><span class="evidence-id mono">E-MET-01</span><div><strong>利润表 · 核心指标</strong><p>营收 12,840；营业成本 8,808；净利润 1,268。计算公式：毛利率 =（收入 − 成本）/ 收入。</p></div><span class="status-badge status-good">已验证</span></div>
+                    <div class="evidence-row"><span class="evidence-id mono">E-AR-01</span><div><strong>资产负债表 · 应收账款</strong><p>期末 3,842 万元 vs 上年同期 2,780 万元；周转天数 = 期末应收 / 收入 × 270。</p></div><span class="status-badge status-good">已验证</span></div>
+                    <div class="evidence-row"><span class="evidence-id mono">E-OR-01</span><div><strong>资产负债表 · 其他应收款</strong><p>期末 1,870 万元 vs 1,152 万元；款项性质与对手方未披露。</p></div><span class="status-badge status-warning">待补证</span></div>
+                  </div>
+                  <button class="button button-secondary button-sm" type="button" data-report-tab-target="appendix">打开完整证据附录</button>
+                </section>
+
+                <section class="report-section" id="report-scenario">
+                  <div class="report-section-head"><span>06</span><h3>情景模拟</h3></div>
+                  <p>基于以下情景参数，模拟净利润为 <strong id="reportScenarioNet">¥1,444.0 万</strong>，较基准 <strong id="reportScenarioDelta">+13.9%</strong>。参数：收入 <span id="reportScenarioRevenue">+4.0%</span>，成本率 <span id="reportScenarioCost">-1.0pp</span>，销售费用 <span id="reportScenarioSales">+6.0%</span>。</p>
+                  <div class="report-scenario-box">
+                    <div><span>基准净利润</span><strong>¥1,268.1 万</strong></div>
+                    <div><span>模拟净利润</span><strong id="reportScenarioNetBox">¥1,444.0 万</strong></div>
+                    <div><span>模拟净利率</span><strong id="reportScenarioMargin">10.8%</strong></div>
+                    <div><span>参数快照</span><strong id="reportScenarioParams">服务端确定性计算</strong></div>
+                  </div>
+                  <p class="report-note">模拟不含营运资本、产能、产品结构、汇率与一次性项目；不是预算、盈利预测或投资建议。</p>
+                </section>
+
+                <section class="report-section" id="report-actions">
+                  <div class="report-section-head"><span>07</span><h3>后续建议</h3></div>
+                  <ol class="report-action-list">
+                    <li><strong>补齐应收账款账龄与期后回款。</strong><span>优先核查前五大客户与信用政策是否变化，判断 80.8 天周转天数是否可持续。</span></li>
+                    <li><strong>获取其他应收款明细。</strong><span>明确对手方、款项性质、账龄与回收安排；在补充前不将相关异常升级为结论。</span></li>
+                    <li><strong>拆分成本与产品结构。</strong><span>解释毛利率下降 2.7pp 的来源：原材料、售价、产品组合或返利，避免只归因于单一因素。</span></li>
+                    <li><strong>复核费用分类与收入截止性。</strong><span>确认销售费用率下降是否由口径调整导致，并抽取 9 月大额收入核对发货与签收。</span></li>
+                    <li><strong>将情景作为讨论工具。</strong><span>在管理层会议中明确假设与限制，不把模拟净利润当作承诺。</span></li>
+                  </ol>
+                </section>
+
+                <section class="report-section report-limits" id="report-limits">
+                  <div class="report-section-head"><span>08</span><h3>分析限制</h3></div>
+                  <ul>
+                    <li>本报告基于 2025 年前三季度的有限报表数据，未经审计，未获取总账、明细账、合同、发票和银行流水。</li>
+                    <li>应收账款周转天数使用期末口径，未使用平均余额；其他应收款的对手方与性质未披露。</li>
+                    <li>异常规则只能提示需要核查的信号，不能证明或排除舞弊、违法或管理层不当行为。</li>
+                    <li>情景模拟为确定性敏感性模型，不构成预测；不含现金流、产能、市场竞争与融资约束。</li>
+                    <li>报告为 Agent 生成的草稿，须由具备相应专业能力的人员复核后才能对外使用。</li>
+                  </ul>
+                  <p class="report-signoff">FinGuard · 辅助财务分析工具 · 非正式审计或鉴证意见</p>
+                </section>
+              </article>
+
+              <article class="report-paper report-appendix" id="reportAppendix" hidden>
+                <header class="report-cover report-cover-compact">
+                  <div class="report-cover-top"><span class="report-brand">FinGuard</span><span class="status-badge status-warning">证据附录 · 示例</span></div>
+                  <p class="report-overline">EVIDENCE APPENDIX</p>
+                  <h2>证据与计算附录</h2>
+                  <p class="report-subtitle">RUN-20251024-03 · 12 / 16 条证据已定位</p>
+                </header>
+                <section class="report-section">
+                  <div class="report-section-head"><span>A</span><h3>证据索引</h3></div>
+                  <table class="report-table evidence-table">
+                    <caption class="visually-hidden">证据索引</caption>
+                    <thead><tr><th scope="col">证据 ID</th><th scope="col">来源</th><th scope="col">原始值</th><th scope="col">用途</th><th scope="col">状态</th></tr></thead>
+                    <tbody>
+                      <tr id="E-MET-01"><td class="mono">E-MET-01</td><td>利润表 · 2025 前三季度</td><td>收入 128,400,000；成本 88,080,000；净利润 12,680,000 元</td><td>核心指标与利润率</td><td><span class="status-badge status-good">已验证</span></td></tr>
+                      <tr id="E-AR-01"><td class="mono">E-AR-01</td><td>资产负债表 · 应收账款</td><td>38,420,000 元（期末）</td><td>A-01 应收增速与周转天数</td><td><span class="status-badge status-good">已验证</span></td></tr>
+                      <tr id="E-AR-02"><td class="mono">E-AR-02</td><td>资产负债表 · 应收账款</td><td>27,800,000 元（上年同期）</td><td>A-01 同比比较</td><td><span class="status-badge status-good">已验证</span></td></tr>
+                      <tr id="E-CF-01"><td class="mono">E-CF-01</td><td>现金流量表 · 经营活动</td><td>9,860,000 元（净额）</td><td>A-02 OCF / 净利润</td><td><span class="status-badge status-good">已验证</span></td></tr>
+                      <tr id="E-OR-01"><td class="mono">E-OR-01</td><td>资产负债表 · 其他应收款</td><td>18,700,000 元；明细缺失</td><td>A-06 规模与性质</td><td><span class="status-badge status-warning">待补证</span></td></tr>
+                      <tr><td class="mono">E-EX-01</td><td>费用明细 · 销售费用</td><td>10,030,000 元；分类待确认</td><td>A-04 费用率下降</td><td><span class="status-badge status-warning">待补证</span></td></tr>
+                      <tr><td class="mono">E-REV-01</td><td>收入明细 · 9 月</td><td>9 月占 Q3 48.7%；截止性资料缺失</td><td>A-05 收入集中</td><td><span class="status-badge status-warning">待补证</span></td></tr>
+                    </tbody>
+                  </table>
+                </section>
+                <section class="report-section">
+                  <div class="report-section-head"><span>B</span><h3>计算过程</h3></div>
+                  <div class="calc-block">
+                    <div class="calc-row"><span>应收账款同比</span><code>(38,420,000 − 27,800,000) / 27,800,000 = 38.2%</code></div>
+                    <div class="calc-row"><span>应收账款周转天数</span><code>38,420,000 / 128,400,000 × 270 = 80.8 天</code></div>
+                    <div class="calc-row"><span>OCF / 净利润</span><code>9,860,000 / 12,680,000 = 0.78</code></div>
+                    <div class="calc-row"><span>毛利率变动</span><code>31.4% − 34.1% = −2.7pp</code></div>
+                    <div class="calc-row"><span>其他应收款增幅</span><code>(18,700,000 − 11,520,000) / 11,520,000 = 62.3%</code></div>
+                  </div>
+                </section>
+                <section class="report-section">
+                  <div class="report-section-head"><span>C</span><h3>待补证清单</h3></div>
+                  <ul class="report-limits-list">
+                    <li><strong>其他应收款：</strong>对手方名称、款项性质、账龄、回收计划。</li>
+                    <li><strong>应收账款：</strong>账龄表、前五大客户、期后回款、信用政策变更。</li>
+                    <li><strong>销售费用：</strong>分类口径、是否存在重分类或资本化调整。</li>
+                    <li><strong>收入截止性：</strong>9 月大额收入对应的发货单、签收单、退货记录。</li>
+                  </ul>
+                  <div class="report-callout"><strong>核验说明</strong><p>待补证项不会进入“已核验结论”。在证据补齐前，报告仅能描述数据现象与可能原因，不能作出定性判断。</p></div>
+                </section>
+                <p class="report-signoff">FinGuard · 证据附录 · 示例数据 · 非正式审计或鉴证意见</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SETTINGS ==================== -->
+        <section class="view" id="view-settings" data-view="settings" aria-labelledby="settingsTitle" hidden>
+          <div class="page-heading">
+            <div class="heading-copy">
+              <p class="eyebrow"><span class="eyebrow-line"></span>SYSTEM STATUS · 设置</p>
+              <h1 id="settingsTitle">系统状态与连接边界</h1>
+              <p class="page-subtitle" id="settingsSubtitle">这里展示本地后端、Agent 与模型配置的真实状态。未配置的服务不会伪装成已连接。</p>
+            </div>
+            <div class="page-actions">
+              <span class="status-badge status-warning">设计阶段</span>
+            </div>
+          </div>
+
+          <div class="settings-layout">
+            <div class="settings-main">
+              <article class="card status-card">
+                <div class="card-header">
+                  <div>
+                    <div class="card-kicker">RUNTIME STATUS</div>
+                    <h2 class="card-title">运行状态</h2>
+                  </div>
+                  <div class="header-tools">
+                    <button class="button button-secondary button-sm" type="button" id="testLlmBtn">
+                      <svg class="icon icon-sm" aria-hidden="true"><use href="#i-agent"></use></svg>
+                      测试模型
+                    </button>
+                    <button class="button button-secondary button-sm" type="button" id="checkConnectionBtn">
+                      <svg class="icon icon-sm" aria-hidden="true"><use href="#i-refresh"></use></svg>
+                      检查连接
+                    </button>
+                  </div>
+                </div>
+                <div class="status-table-wrap">
+                  <table class="data-table status-table">
+                    <caption class="visually-hidden">系统运行状态</caption>
+                    <thead><tr><th scope="col">组件</th><th scope="col">当前状态</th><th scope="col">说明</th></tr></thead>
+                    <tbody id="systemStatusBody">
+                      <tr><td><span class="cell-primary">运行模式</span></td><td><span class="status-badge status-info"><span class="status-symbol">●</span>本地真实计算</span></td><td>FastAPI 后端运行中</td></tr>
+                      <tr><td><span class="cell-primary">模型连接</span></td><td><span class="status-badge status-neutral"><span class="status-symbol">○</span>未配置</span></td><td>规划通过 OpenAI 兼容接口接入 DeepSeek V4.1 Flash；当前未调用</td></tr>
+                      <tr><td><span class="cell-primary">Agent 运行时</span></td><td><span class="status-badge status-neutral"><span class="status-symbol">○</span>未启动</span></td><td>工作区中的计划与时间线为静态模拟</td></tr>
+                      <tr><td><span class="cell-primary">后端服务</span></td><td><span class="status-badge status-neutral"><span class="status-symbol">○</span>未启动</span></td><td>FastAPI、解析器、规则引擎均未实现</td></tr>
+                      <tr><td><span class="cell-primary">登录状态</span></td><td><span class="status-badge status-neutral"><span class="status-symbol">○</span>本地访客</span></td><td>无 Supabase Auth 会话，无用户数据</td></tr>
+                      <tr><td><span class="cell-primary">API 配置</span></td><td><span class="status-badge status-neutral"><span class="status-symbol">○</span>未接入</span></td><td>页面不含任何密钥、令牌或外部端点</td></tr>
+                      <tr><td><span class="cell-primary">数据存储</span></td><td><span class="status-badge status-neutral"><span class="status-symbol">○</span>仅浏览器内存</span></td><td>刷新即重置；文件选择不会上传或持久化</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="status-footnote">
+                  <svg class="icon icon-sm" aria-hidden="true"><use href="#i-info"></use></svg>
+                  「检查连接」只测试本机 FastAPI；「测试模型」会向配置的模型服务发送一个不含财务数据的请求。
+                </div>
+              </article>
+
+              <article class="card security-card">
+                <div class="card-header">
+                  <div>
+                    <div class="card-kicker">SECURITY & PRIVACY</div>
+                    <h2 class="card-title">数据安全边界</h2>
+                  </div>
+                  <span class="status-badge status-neutral">设计原则</span>
+                </div>
+                <div class="security-grid">
+                  <div class="security-item"><span class="security-icon"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg></span><div><strong>文件只在本机后端处理</strong><p>上传文件保存在本机 data/uploads，不发送到第三方；启用远程模型时只发送结构化摘要。</p></div></div>
+                  <div class="security-item"><span class="security-icon"><svg class="icon" aria-hidden="true"><use href="#i-database"></use></svg></span><div><strong>密钥只在服务端</strong><p>模型通过服务端环境变量访问，浏览器永远不接触 API Key。</p></div></div>
+                  <div class="security-item"><span class="security-icon"><svg class="icon" aria-hidden="true"><use href="#i-info"></use></svg></span><div><strong>结论保留限制</strong><p>异常只作为核查信号；报告必须包含待补证项与分析限制。</p></div></div>
+                  <div class="security-item"><span class="security-icon"><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg></span><div><strong>可追溯的本地记录</strong><p>工具运行、证据引用与报告保存在本地；删除 data/uploads 与 data/runtime 可清理运行数据。</p></div></div>
+                </div>
+              </article>
+            </div>
+
+            <aside class="settings-rail">
+              <article class="card config-card">
+                <div class="card-header">
+                  <div>
+                    <div class="card-kicker">MODEL CONFIG</div>
+                    <h2 class="card-title">模型与连接配置</h2>
+                  </div>
+                  <span class="status-badge status-neutral">只读</span>
+                </div>
+                <div class="config-form">
+                  <label class="field-label" for="cfgBase">模型服务 Base URL</label>
+                  <input class="text-input" id="cfgBase" type="text" value="https://provider.example/v1" disabled>
+                  <label class="field-label" for="cfgModel">模型名称</label>
+                  <input class="text-input" id="cfgModel" type="text" value="DeepSeek V4.1 Flash（规划）" disabled>
+                  <label class="field-label" for="cfgKey">API Key</label>
+                  <input class="text-input" id="cfgKey" type="password" value="not-configured" disabled>
+                  <p class="config-note">正式版由服务端 `.env` 管理，前端不保存、不显示真实密钥。</p>
+                  <div class="config-divider"></div>
+                  <div class="config-row"><span>计划调用方式</span><strong>OpenAI 兼容 SDK</strong></div>
+                  <div class="config-row"><span>工具权限</span><strong>白名单</strong></div>
+                  <div class="config-row"><span>数据保留</span><strong>30 天 · 可配置</strong></div>
+                </div>
+              </article>
+
+              <article class="card phase-card">
+                <div class="card-kicker">CURRENT PHASE</div>
+                <h2 class="card-title">实现与验证阶段</h2>
+                <p>本地演示版已完成数据接入、确定性计算、Agent 运行时、证据链与报告。认证、远程模型验证与云部署仍为可选项。</p>
+                <div class="phase-list">
+                  <div class="phase-row is-done"><span></span><strong>产品规格与界面设计</strong><em>完成</em></div>
+                  <div class="phase-row is-current"><span></span><strong>界面评审</strong><em>进行中</em></div>
+                  <div class="phase-row"><span></span><strong>数据接入与确定性分析</strong><em>待开始</em></div>
+                  <div class="phase-row"><span></span><strong>Agent 运行时与报告</strong><em>待开始</em></div>
+                  <div class="phase-row"><span></span><strong>认证与部署</strong><em>待开始</em></div>
+                </div>
+                <div class="phase-footnote">详细路线图：<span class="mono">docs/IMPLEMENTATION_PLAN.md</span></div>
+              </article>
+
+              <article class="card limitation-card">
+                <div class="card-kicker">RUNTIME NOTE</div>
+                <h2 class="card-title">为什么区分“已配置”和“已验证”</h2>
+                <p>配置了模型地址和密钥，并不等于远程服务一定可用。系统不会在未实际测试时显示“已连接”；模型调用失败会自动回退到本地叙述并保留错误状态。</p>
+                <p class="limitation-foot">FinGuard 0.1 · Local Demo · 2026-10-26</p>
+              </article>
+            </aside>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- ==================== ANOMALY DRAWER ==================== -->
+  <div class="drawer-layer" id="anomalyDrawer" hidden>
+    <button class="drawer-backdrop" type="button" data-close-drawer aria-label="关闭异常详情"></button>
+    <aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" tabindex="-1">
+      <header class="drawer-head">
+        <div class="drawer-title-wrap">
+          <span class="status-badge" id="drawerSeverity"><span class="status-symbol">■</span>高风险</span>
+          <h2 id="drawerTitle">异常详情</h2>
+          <p id="drawerMeta">A-01 · 2025 前三季度</p>
+        </div>
+        <button class="icon-button" type="button" data-close-drawer aria-label="关闭异常详情">
+          <svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg>
+        </button>
+      </header>
+      <div class="drawer-body" id="drawerBody"></div>
+      <footer class="drawer-foot">
+        <div class="drawer-foot-note">
+          <svg class="icon icon-sm" aria-hidden="true"><use href="#i-shield"></use></svg>
+          异常是核查信号，不构成舞弊或违法结论。
+        </div>
+        <div class="inline-actions">
+          <button class="button button-secondary button-sm" type="button" id="copyFindingBtn">复制证据摘要</button>
+          <button class="button button-primary button-sm" type="button" data-close-drawer>关闭</button>
+        </div>
+      </footer>
+    </aside>
+  </div>
+
+  <!-- ==================== CLASSROOM PRESENTATION MODE ==================== -->
+  <div class="presentation-layer" id="presentationLayer" hidden>
+    <div class="presentation-panel" role="dialog" aria-modal="true" aria-labelledby="presentationTitle" tabindex="-1">
+      <header class="presentation-head">
+        <div>
+          <span class="card-kicker">REAL EXECUTION WALKTHROUGH</span>
+          <h2 id="presentationTitle">课堂讲解模式</h2>
+          <p>直接读取当前分析的计划、工具参数、证据和人工核验记录。</p>
+        </div>
+        <button class="icon-button" type="button" id="presentationClose" aria-label="退出讲解模式">
+          <svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg>
+        </button>
+      </header>
+      <div class="presentation-body">
+        <aside class="presentation-rail" aria-label="讲解阶段">
+          <div class="presentation-stage-indicator is-active" data-presentation-stage="0"><span>01</span><strong>计划</strong></div>
+          <div class="presentation-stage-indicator" data-presentation-stage="1"><span>02</span><strong>工具</strong></div>
+          <div class="presentation-stage-indicator" data-presentation-stage="2"><span>03</span><strong>证据</strong></div>
+          <div class="presentation-stage-indicator" data-presentation-stage="3"><span>04</span><strong>暂停核验</strong></div>
+          <div class="presentation-stage-indicator" data-presentation-stage="4"><span>05</span><strong>结论</strong></div>
+          <div class="presentation-source-note">
+            <svg class="icon icon-sm" aria-hidden="true"><use href="#i-info"></use></svg>
+            内容来自真实执行记录
+          </div>
+        </aside>
+        <section class="presentation-stage" aria-live="polite">
+          <div class="presentation-stage-head">
+            <span class="status-badge status-info" id="presentationStageLabel">阶段 1 / 5</span>
+            <span class="presentation-task-ref" id="presentationTaskRef">—</span>
+          </div>
+          <h3 id="presentationStageTitle">计划</h3>
+          <div class="presentation-content" id="presentationContent"></div>
+          <div class="presentation-controls">
+            <div class="inline-actions">
+              <button class="button button-secondary" type="button" id="presentationPrev">上一步</button>
+              <button class="button button-primary" type="button" id="presentationNext">下一步</button>
+              <button class="button button-secondary" type="button" id="presentationAuto">自动演示</button>
+            </div>
+            <button class="button button-ghost" type="button" id="presentationExit">退出讲解</button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div class="boot-overlay" id="bootOverlay" role="status" aria-live="polite">
+    <div class="boot-card">
+      <span class="boot-mark">FG</span>
+      <div><strong>正在连接 FinGuard 本地分析服务</strong><span>读取演示数据集、真实计算指标和 Agent 执行状态…</span></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <noscript>
+    <div class="noscript-warning">FinGuard 需要 JavaScript 才能连接本地 API、展示真实分析状态和操作 Agent。</div>
+  </noscript>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

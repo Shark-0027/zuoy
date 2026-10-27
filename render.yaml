@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: finguard
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      - key: FINGUARD_HOST
+        value: 0.0.0.0
+      - key: FINGUARD_PORT
+        value: "8000"
+      - key: FINGUARD_DEBUG
+        value: "0"
+      - key: LLM_BASE_URL
+        sync: false
+      - key: LLM_API_KEY
+        sync: false
+      - key: LLM_MODEL
+        sync: false

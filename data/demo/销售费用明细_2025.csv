@@ -1,0 +1,11 @@
+statement,period,item,value,unit,note
+expense_detail,2025-9M,推广服务费,2940000,元,与销售费用合计勾稽待确认
+expense_detail,2025-9M,职工薪酬,4980000,元,
+expense_detail,2025-9M,差旅费,,元,原表缺失
+expense_detail,2025-9M,运输费,,元,原表缺失
+expense_detail,2025-9M,其他费用,2110000,元,
+expense_detail,2024-9M,推广服务费,3180000,元,
+expense_detail,2024-9M,职工薪酬,5620000,元,
+expense_detail,2024-9M,差旅费,1120000,元,
+expense_detail,2024-9M,运输费,1310000,元,
+expense_detail,2024-9M,其他费用,1300000,元,

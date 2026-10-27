@@ -1,0 +1,22 @@
+services:
+  finguard:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      FINGUARD_HOST: 0.0.0.0
+      FINGUARD_PORT: "8000"
+      FINGUARD_DEBUG: "0"
+      FINGUARD_DATA_DIR: /app/data
+      # Optional remote model configuration:
+      # LLM_BASE_URL: ${LLM_BASE_URL:-}
+      # LLM_API_KEY: ${LLM_API_KEY:-}
+      # LLM_MODEL: ${LLM_MODEL:-}
+    volumes:
+      - finguard_uploads:/app/data/uploads
+      - finguard_runtime:/app/data/runtime
+    restart: unless-stopped
+
+volumes:
+  finguard_uploads:
+  finguard_runtime:
