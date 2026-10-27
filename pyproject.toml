@@ -25,6 +25,9 @@ dependencies = [
 [project.scripts]
 finguard = "finguard.main:run"
 
+[tool.vercel]
+entrypoint = "src.finguard.main:app"
+
 [dependency-groups]
 dev = [
   "pytest>=8.3,<9",

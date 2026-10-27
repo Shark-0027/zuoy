@@ -46,13 +46,20 @@ class Settings:
     @classmethod
     def from_env(cls, base_dir: Path | None = None) -> Settings:
         root = (base_dir or Path(__file__).resolve().parents[2]).resolve()
-        data_dir = Path(os.getenv("FINGUARD_DATA_DIR", str(root / "data"))).resolve()
+        # Local runs use ./data. Serverless platforms often make the bundle
+        # read-only, so Vercel defaults writable state to /tmp while keeping
+        # read-only demo CSVs in the deployed project bundle.
+        data_dir = Path(os.getenv("FINGUARD_DATA_DIR", str(root / "data")))
+        if not os.getenv("FINGUARD_DATA_DIR") and _env_bool("VERCEL", False):
+            data_dir = Path("/tmp/finguard")
+        data_dir = data_dir.resolve()
+        demo_dir = Path(os.getenv("FINGUARD_DEMO_DIR", str(root / "data" / "demo"))).resolve()
         return cls(
             base_dir=root,
             data_dir=data_dir,
-            demo_dir=data_dir / "demo",
-            upload_dir=data_dir / "uploads",
-            runtime_dir=data_dir / "runtime",
+            demo_dir=demo_dir,
+            upload_dir=Path(os.getenv("FINGUARD_UPLOAD_DIR", str(data_dir / "uploads"))).resolve(),
+            runtime_dir=Path(os.getenv("FINGUARD_RUNTIME_DIR", str(data_dir / "runtime"))).resolve(),
             # LLM_* is the canonical prefix. OPENAI_* / DEEPSEEK_* are accepted as
             # compatibility aliases so an existing .env does not need renaming.
             llm_base_url=_first_env("LLM_BASE_URL", "OPENAI_BASE_URL", "DEEPSEEK_BASE_URL"),
